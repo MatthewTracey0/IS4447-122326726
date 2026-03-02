@@ -18,7 +18,7 @@ type Student = {
   count: number;
 };
 
-export default function IndexScreen() {
+export default function StudentsScreen() {
   const [students, setStudents] = useState<Student[]>([
     { id: 1, name: 'Emilia', major: 'Computer Science', year: '3', count: 0 },
     { id: 2, name: 'Jackie', major: 'Business', year: '2', count: 0 },
@@ -64,7 +64,6 @@ export default function IndexScreen() {
         year,
         count: 0,
       };
-
       setStudents(prev => [...prev, newStudent]);
     }
 
@@ -83,14 +82,8 @@ export default function IndexScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled"
-      >
+      <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.total}>Total Score: {total}</Text>
-
-        {total > 5 && <Text style={{ color: 'green' }}>Class doing great</Text>}
-        {total < 0 && <Text style={{ color: 'red' }}>Class struggling</Text>}
 
         <TextInput
           placeholder="Name"
@@ -123,48 +116,31 @@ export default function IndexScreen() {
           <Button title="Reset All" onPress={resetAll} />
         </View>
 
-        {students.length === 0 ? (
-          <Text>No students added yet.</Text>
-        ) : (
-          students.map(student => (
-            <StudentCard
-              key={student.id}
-              {...student}
-              onUpdate={updateCount}
-              onRemove={removeStudent}
-              onEdit={(id) => {
-                const student = students.find(s => s.id === id);
-                if (!student) return;
+        {students.map(student => (
+          <StudentCard
+            key={student.id}
+            {...student}
+            onUpdate={updateCount}
+            onRemove={removeStudent}
+            onEdit={(id) => {
+              const student = students.find(s => s.id === id);
+              if (!student) return;
 
-                setEditingId(id);
-                setName(student.name);
-                setMajor(student.major);
-                setYear(student.year);
-              }}
-            />
-          ))
-        )}
+              setEditingId(id);
+              setName(student.name);
+              setMajor(student.major);
+              setYear(student.year);
+            }}
+          />
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-  },
-  total: {
-    fontSize: 22,
-    marginBottom: 10,
-  },
-  input: {
-    borderWidth: 1,
-    marginVertical: 5,
-    padding: 8,
-  },
+  safe: { flex: 1, backgroundColor: '#fff' },
+  scrollContent: { paddingHorizontal: 20, paddingBottom: 40 },
+  total: { fontSize: 22, marginBottom: 10 },
+  input: { borderWidth: 1, marginVertical: 5, padding: 8 },
 });

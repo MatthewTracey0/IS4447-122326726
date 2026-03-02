@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { Button, Text, View } from 'react-native';
 
 type StudentCardProps = {
@@ -26,32 +27,22 @@ export default function StudentCard({
       <Text style={{ fontSize: 18 }}>{name}</Text>
       <Text>Major: {major}</Text>
       <Text>Year: {year}</Text>
-
-      <Text style={{ marginTop: 10 }}>Count: {count}</Text>
+      <Text>Count: {count}</Text>
 
       <Button title="+1" onPress={() => onUpdate(id, 1)} />
       <Button title="-1" onPress={() => onUpdate(id, -1)} />
+      <Button title="Edit" onPress={() => onEdit(id)} />
+      <Button title="Remove" onPress={() => onRemove(id)} />
 
-      <Text
-        style={{
-          color:
-            count > 0 ? 'green' :
-            count < 0 ? 'red' :
-            'gray'
-        }}
-      >
-        {count > 0 && 'Positive'}
-        {count < 0 && 'Negative'}
-        {count === 0 && 'Zero'}
-      </Text>
-
-      <View style={{ marginTop: 5 }}>
-        <Button title="Edit" onPress={() => onEdit(id)} />
-      </View>
-
-      <View style={{ marginTop: 5 }}>
-        <Button title="Remove" onPress={() => onRemove(id)} />
-      </View>
+      <Button
+        title="View Details"
+        onPress={() =>
+          router.push({
+            pathname: '/student/[id]',
+            params: { id: id.toString() },
+          })
+        }
+      />
     </View>
   );
 }

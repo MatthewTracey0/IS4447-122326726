@@ -1,6 +1,8 @@
 import { useRouter } from 'expo-router';
 import { useContext, useState } from 'react';
 import { Button, TextInput, View } from 'react-native';
+import { db } from '@/db/client';
+import { students as studentsTable } from '@/db/schema';
 import { StudentContext } from './_layout';
 
 export default function AddStudent() {
@@ -9,22 +11,22 @@ export default function AddStudent() {
 
   if (!context) return null;
  
-  const { students, setStudents } = context;
+  const { setStudents } = context;
 
   const [name, setName] = useState('');
   const [major, setMajor] = useState('');
   const [year, setYear] = useState('');
 
-  const saveStudent = () => {
-    const newStudent = {
-      id: Date.now(),
+  const saveStudent = async () => {
+    await db.insert(studentsTable).values({
       name,
       major,
       year,
       count: 0,
-    };
+    });
 
-    setStudents([...students, newStudent]);
+    const rows = await db.select().from(studentsTable);
+    setStudents(rows);
     router.back();
   };
 

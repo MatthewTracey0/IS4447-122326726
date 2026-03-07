@@ -1,6 +1,9 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useContext } from 'react';
 import { Button, Text, View } from 'react-native';
+import { eq } from 'drizzle-orm';
+import { db } from '@/db/client';
+import { students as studentsTable } from '@/db/schema';
 import { Student, StudentContext } from '../_layout';
 
 export default function StudentDetail() {
@@ -18,8 +21,13 @@ export default function StudentDetail() {
 
   if (!student) return null;
 
-  const deleteStudent = () => {
-    setStudents(students.filter(s => s.id !== Number(id)));
+  const deleteStudent = async () => {
+    await db
+      .delete(studentsTable)
+      .where(eq(studentsTable.id, Number(id)));
+
+    const rows = await db.select().from(studentsTable);
+    setStudents(rows);
     router.back();
   };
 

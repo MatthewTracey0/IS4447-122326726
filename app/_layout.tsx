@@ -1,5 +1,8 @@
 import { Stack } from 'expo-router';
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
+import { db } from '@/db/client';
+import { students as studentsTable } from '@/db/schema';
+import { seedStudentsIfEmpty } from '@/db/seed';
 
 export type Student = {
   id: number;
@@ -18,11 +21,17 @@ export const StudentContext =
   createContext<StudentContextType | null>(null);
 
 export default function RootLayout() {
-  const [students, setStudents] = useState<Student[]>([
-    { id: 1, name: 'Emilia', major: 'Computer Science', year: '3', count: 0 },
-    { id: 2, name: 'Jackie', major: 'Business', year: '2', count: 0 },
-    { id: 3, name: 'Sammy', major: 'Engineering', year: '4', count: 0 },
-  ]);
+  const [students, setStudents] = useState<Student[]>([]);
+
+  useEffect(() => {
+    const loadStudents = async () => {
+      await seedStudentsIfEmpty();
+      const rows = await db.select().from(studentsTable);
+      setStudents(rows);
+    };
+
+    void loadStudents();
+  }, []);
 
   return (
     <StudentContext.Provider value={{ students, setStudents }}>

@@ -1,6 +1,10 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useContext } from 'react';
-import { Button, Text, View } from 'react-native';
+import InfoTag from '@/components/ui/info-tag';
+import PrimaryButton from '@/components/ui/primary-button';
+import ScreenHeader from '@/components/ui/screen-header';
+import { StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { eq } from 'drizzle-orm';
 import { db } from '@/db/client';
 import { students as studentsTable } from '@/db/schema';
@@ -32,13 +36,15 @@ export default function StudentDetail() {
   };
 
   return (
-    <View style={{ padding: 20 }}>
-      <Text style={{ fontSize: 22 }}>{student.name}</Text>
-      <Text>{student.major}</Text>
-      <Text>{student.year}</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <ScreenHeader title={student.name} subtitle="Student details" />
+      <View style={styles.tags}>
+        <InfoTag label="Major" value={student.major} />
+        <InfoTag label="Year" value={student.year} />
+      </View>
 
-      <Button
-        title="Edit"
+      <PrimaryButton
+        label="Edit"
         onPress={() =>
           router.push({
             pathname: '../student/[id]/edit',
@@ -47,9 +53,28 @@ export default function StudentDetail() {
         }
       />
 
-      <Button title="Delete" onPress={deleteStudent} />
-
-      <Button title="Back" onPress={() => router.back()} />
-    </View>
+      <View style={styles.buttonSpacing}>
+        <PrimaryButton label="Delete" variant="danger" onPress={deleteStudent} />
+      </View>
+      <View style={styles.buttonSpacing}>
+        <PrimaryButton label="Back" variant="secondary" onPress={() => router.back()} />
+      </View>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: '#F8FAFC',
+    flex: 1,
+    padding: 20,
+  },
+  tags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 18,
+  },
+  buttonSpacing: {
+    marginTop: 10,
+  },
+});

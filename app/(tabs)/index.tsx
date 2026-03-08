@@ -1,7 +1,9 @@
 import StudentCard from '@/components/StudentCard';
+import PrimaryButton from '@/components/ui/primary-button';
+import ScreenHeader from '@/components/ui/screen-header';
 import { useRouter } from 'expo-router';
 import { useContext } from 'react';
-import { Button, Text } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Student, StudentContext } from '../_layout';
 
@@ -14,19 +16,38 @@ export default function IndexScreen() {
   const { students } = context;
 
   return (
-    <SafeAreaView style={{ flex: 1, padding: 20 }}>
-      <Text style={{ fontSize: 22, marginBottom: 10 }}>
-        Students
-      </Text>
+    <SafeAreaView style={styles.safeArea}>
+      <ScreenHeader
+        title="Students"
+        subtitle={`${students.length} enrolled`}
+      />
 
-      <Button
-        title="Add Student"
+      <PrimaryButton
+        label="Add Student"
         onPress={() => router.push({ pathname: '../add' })}
       />
 
-      {students.map((student: Student) => (
-        <StudentCard key={student.id} student={student} />
-      ))}
+      <ScrollView
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {students.map((student: Student) => (
+          <StudentCard key={student.id} student={student} />
+        ))}
+      </ScrollView>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: '#F8FAFC',
+    flex: 1,
+    paddingHorizontal: 18,
+    paddingTop: 10,
+  },
+  listContent: {
+    paddingBottom: 24,
+    paddingTop: 14,
+  },
+});

@@ -54,10 +54,7 @@ export default function StudentDetail() {
       />
 
       <View style={styles.buttonSpacing}>
-        <PrimaryButton label="Delete" variant="danger" onPress={deleteStudent} />
-      </View>
-      <View style={styles.buttonSpacing}>
-        <PrimaryButton label="Back" variant="secondary" onPress={() => router.back()} />
+        <PrimaryButton label="Delete" variant="secondary" onPress={deleteStudent} />
       </View>
     </SafeAreaView>
   );

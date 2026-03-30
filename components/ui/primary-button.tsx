@@ -15,6 +15,8 @@ export default function PrimaryButton({
 }: Props) {
   return (
     <Pressable
+      accessibilityLabel={label}
+      accessibilityRole="button"
       onPress={onPress}
       style={({ pressed }) => [
         styles.button,
@@ -28,6 +30,7 @@ export default function PrimaryButton({
         style={[
           styles.label,
           variant === 'secondary' ? styles.secondaryLabel : null,
+          variant === 'danger' ? styles.dangerLabel : null,
           compact ? styles.compactLabel : null,
         ]}
       >
@@ -46,12 +49,14 @@ const styles = StyleSheet.create({
     paddingVertical: 11,
   },
   secondary: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#CBD5E1',
+    backgroundColor: '#F8FAFC',
+    borderColor: '#94A3B8',
     borderWidth: 1,
   },
   danger: {
-    backgroundColor: '#B91C1C',
+    backgroundColor: '#FEF2F2',
+    borderColor: '#FCA5A5',
+    borderWidth: 1,
   },
   compact: {
     alignSelf: 'flex-start',
@@ -69,6 +74,9 @@ const styles = StyleSheet.create({
   },
   secondaryLabel: {
     color: '#0F172A',
+  },
+  dangerLabel: {
+    color: '#7F1D1D',
   },
   compactLabel: {
     fontSize: 13,

@@ -12,6 +12,7 @@ export default function FormField({ label, value, onChangeText, placeholder }: P
     <View style={styles.wrapper}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
+        accessibilityLabel={label}
         placeholder={placeholder ?? label}
         value={value}
         onChangeText={onChangeText}

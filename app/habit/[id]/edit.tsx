@@ -7,50 +7,48 @@ import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { eq } from 'drizzle-orm';
 import { db } from '@/db/client';
-import { students as studentsTable } from '@/db/schema';
-import { Student, StudentContext } from '../../_layout';
+import { habits as habitsTable } from '@/db/schema';
+import { Habit, HabitContext } from '../../_layout';
 
-export default function EditStudent() {
+export default function EditHabit() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const context = useContext(StudentContext);
+  const context = useContext(HabitContext);
   const [name, setName] = useState('');
-  const [major, setMajor] = useState('');
-  const [year, setYear] = useState('');
-  const student = context?.students.find(
-    (s: Student) => s.id === Number(id)
+  const [categoryId, setCategoryId] = useState('');
+  const habit = context?.habits.find(
+    (h: Habit) => h.id === Number(id)
   );
 
   useEffect(() => {
-    if (!student) return;
-    setName(student.name);
-    setMajor(student.major);
-    setYear(student.year);
-  }, [student]);
+    if (!habit) return;
+    setName(habit.name);
+    setCategoryId(String(habit.categoryId));
+  }, [habit]);
 
-  if (!context || !student) return null;
+  if (!context || !habit) return null;
 
-  const { setStudents } = context;
+  const { setHabits } = context;
 
   const saveChanges = async () => {
     await db
-      .update(studentsTable)
-      .set({ name, major, year })
-      .where(eq(studentsTable.id, Number(id)));
+      .update(habitsTable)
+      .set({ name, categoryId: Number(categoryId) })
+      .where(eq(habitsTable.id, Number(id)));
 
-    const rows = await db.select().from(studentsTable);
-    setStudents(rows);
+    const rows = await db.select().from(habitsTable);
+    setHabits(rows);
 
     router.back();
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScreenHeader title="Edit Student" subtitle={`Update ${student.name}`} />
+      <ScreenHeader title="Edit Habit" subtitle={`Update ${habit.name}`} />
       <View style={styles.form}>
-        <FormField label="Name" value={name} onChangeText={setName} />
-        <FormField label="Major" value={major} onChangeText={setMajor} />
-        <FormField label="Year" value={year} onChangeText={setYear} />
+        <FormField label="Habit name" value={name} onChangeText={setName} />
+        <FormField label="Category" value={categoryId} onChangeText={setCategoryId} />
+        <FormField label="Frequency" value={categoryId} onChangeText={setCategoryId} />
       </View>
 
       <PrimaryButton label="Save Changes" onPress={saveChanges} />

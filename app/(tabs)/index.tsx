@@ -1,104 +1,87 @@
-import StudentCard from '@/components/StudentCard';
+import HabitCard from '@/components/HabitCard';
 import PrimaryButton from '@/components/ui/primary-button';
 import ScreenHeader from '@/components/ui/screen-header';
+import CategoryButton from '@/components/ui/category-button';
 import { useRouter } from 'expo-router';
 import { useContext, useState } from 'react';
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Student, StudentContext } from '../_layout';
+import { HabitWithDetails, HabitContext } from '../_layout';
 
 export default function IndexScreen() {
   const router = useRouter();
-  const context = useContext(StudentContext);
+  const context = useContext(HabitContext);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedYear, setSelectedYear] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
   if (!context) return null;
 
-  const { students } = context;
+  const { habitsWithDetails, categories } = context;
   const normalizedQuery = searchQuery.trim().toLowerCase();
-  const yearOptions = [
+  const categoryOptions = [
     'All',
-    ...Array.from(new Set(students.map((student: Student) => String(student.year)))).sort(
-      (a, b) => Number(a) - Number(b)
-    ),
+    'Sleep',
+    'Health',
+    'Study',
+    'Hobbies',
   ];
 
-  const filteredStudents = students.filter((student: Student) => {
+  const filteredHabits = habitsWithDetails.filter((habit: HabitWithDetails) => {
     const matchesSearch =
       normalizedQuery.length === 0 ||
-      student.name.toLowerCase().includes(normalizedQuery) ||
-      student.major.toLowerCase().includes(normalizedQuery);
+      habit.name.toLowerCase().includes(normalizedQuery);
 
-    const matchesYear =
-      selectedYear === 'All' || String(student.year) === selectedYear;
-
-    return matchesSearch && matchesYear;
+// Used to check when a user clicks 'Sleep' button, and the habit belongs to category 1, its then shown
+    const matchesCategory =
+      selectedCategory === 'All' ||
+    (
+        selectedCategory === 'Sleep' && habit.categoryId === 1 ||
+        selectedCategory === 'Health' && habit.categoryId === 2 ||
+        selectedCategory === 'Study' && habit.categoryId === 3 ||
+        selectedCategory === 'Hobbies' && habit.categoryId === 4
+    );
+    return matchesSearch && matchesCategory;
   });
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScreenHeader
-        title="Students"
-        subtitle={`${students.length} enrolled`}
+        title="Habits"
+        subtitle={`${habitsWithDetails.length} habits tracked`}
       />
 
       <PrimaryButton
-        label="Add Vacation"
+        label="Add Habit"
         onPress={() => router.push({ pathname: '../add' })}
       />
 
       <TextInput
         value={searchQuery}
         onChangeText={setSearchQuery}
-        placeholder="Search by person  or major"
+        placeholder="Search habits"
         style={styles.searchInput}
       />
 
       <View style={styles.filterRow}>
-        {yearOptions.map((year) => {
-          const isSelected = selectedYear === year;
-
-          return (
-            <Pressable
-              key={year}
-              accessibilityLabel={`Filter by year ${year}`}
-              accessibilityRole="button"
-              onPress={() => setSelectedYear(year)}
-              style={[
-                styles.filterButton,
-                isSelected && styles.filterButtonSelected,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.filterButtonText,
-                  isSelected && styles.filterButtonTextSelected,
-                ]}
-              >
-                {year}
-              </Text>
-            </Pressable>
-          );
-        })}
+         {categoryOptions.map(category => (
+           <CategoryButton
+             key={category}
+             label={category}
+             selected={selectedCategory === category}
+             onPress={() => setSelectedCategory(category)}
+           />
+         ))}
       </View>
 
       <ScrollView
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
       >
-        {filteredStudents.length === 0 ? (
-          <Text style={styles.emptyText}>No students match your filters</Text>
+        {filteredHabits.length === 0 ? (
+          <Text style={styles.emptyText}>No habits match your filters</Text>
         ) : (
-          filteredStudents.map((student: Student) => (
-            <StudentCard key={student.id} student={student} />
+          filteredHabits.map((habit: HabitWithDetails) => (
+              <HabitCard key={habit.id} habit={habit} />
           ))
         )}
       </ScrollView>
@@ -113,10 +96,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingTop: 10,
   },
+
   listContent: {
     paddingBottom: 24,
     paddingTop: 14,
   },
+
   searchInput: {
     backgroundColor: '#FFFFFF',
     borderColor: '#94A3B8',
@@ -126,36 +111,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
   },
+
   filterRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
     marginTop: 10,
   },
-  filterButton: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#94A3B8',
-    borderRadius: 999,
-    borderWidth: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  filterButtonSelected: {
-    backgroundColor: '#0F172A',
-    borderColor: '#0F172A',
-  },
-  filterButtonText: {
-    color: '#0F172A',
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  filterButtonTextSelected: {
-    color: '#FFFFFF',
-  },
+
   emptyText: {
     color: '#475569',
     fontSize: 16,
     paddingTop: 8,
     textAlign: 'center',
   },
+
 });

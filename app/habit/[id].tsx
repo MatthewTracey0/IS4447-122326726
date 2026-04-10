@@ -55,7 +55,6 @@ export default function HabitDetail() {
       <View>
         <Text style={styles.label}>Category</Text>
         <Text style={styles.value}> {habit.categoryId} </Text>
-        <Text style={styles.value}> {habit.ca} </Text>
       </View>
 
       <PrimaryButton

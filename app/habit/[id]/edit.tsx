@@ -1,14 +1,17 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useContext, useEffect, useState } from 'react';
+import FrequencyButton from '@/components/ui/frequency-button';
+import CategoryButton from '@/components/ui/category-button';
 import FormField from '@/components/ui/form-field';
 import PrimaryButton from '@/components/ui/primary-button';
 import ScreenHeader from '@/components/ui/screen-header';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { eq } from 'drizzle-orm';
 import { db } from '@/db/client';
 import { habits as habitsTable } from '@/db/schema';
-import { Habit, HabitContext } from '../../_layout';
+import { targets as targetsTable } from '@/db/schema';
+import { HabitWithDetails, HabitContext } from '../../_layout';
 
 export default function EditHabit() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -16,14 +19,24 @@ export default function EditHabit() {
   const context = useContext(HabitContext);
   const [name, setName] = useState('');
   const [categoryId, setCategoryId] = useState('');
-  const habit = context?.habits.find(
-    (h: Habit) => h.id === Number(id)
+  const [frequency, setFrequency] = useState<string | 'monthly'>('weekly');
+  const [targetValue, setTargetValue] = useState('');
+
+  const habit = context?.habitsWithDetails.find(
+    (h: HabitWithDetails) => h.id === Number(id)
   );
 
   useEffect(() => {
     if (!habit) return;
     setName(habit.name);
     setCategoryId(String(habit.categoryId));
+    setFrequency(habit.frequency);
+
+    console.log("category is ", habit.categoryId);
+    console.log("habit record is ", habit);
+    console.log("targetValue is ", habit.targetValue);
+    setTargetValue(habit.targetValue);
+
   }, [habit]);
 
   if (!context || !habit) return null;
@@ -36,6 +49,13 @@ export default function EditHabit() {
       .set({ name, categoryId: Number(categoryId) })
       .where(eq(habitsTable.id, Number(id)));
 
+    await db
+      .update(targetsTable)
+      .set({ timePeriod: frequency, targetValue: Number(targetValue) })
+      .where(eq(targetsTable.habitId, Number(id)));
+
+    console.log("updated data");
+
     const rows = await db.select().from(habitsTable);
     setHabits(rows);
 
@@ -47,8 +67,27 @@ export default function EditHabit() {
       <ScreenHeader title="Edit Habit" subtitle={`Update ${habit.name}`} />
       <View style={styles.form}>
         <FormField label="Habit name" value={name} onChangeText={setName} />
-        <FormField label="Category" value={categoryId} onChangeText={setCategoryId} />
-        <FormField label="Frequency" value={categoryId} onChangeText={setCategoryId} />
+          <View style={styles.row}>
+            {context.categories.map(category => (
+              <CategoryButton
+                key={category.id}
+                label={category.name}
+                selected={Number(categoryId) === category.id}
+                onPress={() => setCategoryId(String(category.id))}
+              />
+            ))}
+          </View>
+          <Text style={styles.label}>Frequency</Text>
+          <FrequencyButton
+            selectedId={frequency}
+            setSelectedId={setFrequency}
+          />
+          <FormField
+            label={`Target`}
+            // targetValue has to be a string to show on screen
+            value={targetValue.toString()}
+            onChangeText={setTargetValue}
+          />
       </View>
 
       <PrimaryButton label="Save Changes" onPress={saveChanges} />
@@ -65,10 +104,28 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
+
   form: {
     marginBottom: 6,
   },
+
   buttonSpacing: {
     marginTop: 10,
   },
+
+label: {
+  fontSize: 14,
+  fontWeight: '500',
+  marginTop: 10,
+  marginBottom: 6,
+  color: '#0F172A'
+},
+
+row: {
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  gap: 8,
+  marginBottom: 10,
+},
+
 });

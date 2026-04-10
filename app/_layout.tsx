@@ -4,6 +4,7 @@ import { db } from '@/db/client';
 import { habits as habitsTable } from '@/db/schema';
 import { categories as categoriesTable } from '@/db/schema';
 import { targets as targetsTable } from '@/db/schema';
+import { habitLogs as habitLogsTable } from '@/db/schema';
 import { seedHabitsIfEmpty } from '@/db/seed';
 import { eq } from 'drizzle-orm';
 
@@ -35,6 +36,7 @@ export type HabitWithDetails = {
   categoryName: string;
   frequency: 'weekly' | 'monthly';
   targetValue: number;
+  completedCount: number;
 };
 
 type HabitContextType = {
@@ -57,6 +59,7 @@ useEffect(() => {
 
       const habitRows = await db.select().from(habitsTable);
       const categoryRows = await db.select().from(categoriesTable);
+      const habitLogRows = await db.select().from(habitLogsTable);
 
       const joinedRows = await db
         .select({
@@ -68,14 +71,23 @@ useEffect(() => {
         .leftJoin(categoriesTable, eq(habitsTable.categoryId, categoriesTable.id))
         .leftJoin(targetsTable, eq(habitsTable.id, targetsTable.habitId));
 
-      const mappedHabitsWithDetails: HabitWithDetails[] = joinedRows.map((row) => ({
+    const mappedHabitsWithDetails: HabitWithDetails[] = joinedRows.map((row) => {
+
+      // work out filter the number of habitlog records and put into completedcount
+      const completedCount = habitLogRows.filter(
+        log => log.habitId === row.habit.id
+      ).length;
+
+      return {
         id: row.habit.id,
         name: row.habit.name,
         categoryId: row.habit.categoryId,
         categoryName: row.category?.name ?? 'No category',
         frequency: row.target?.timePeriod === 'monthly' ? 'monthly' : 'weekly',
         targetValue: row.target?.targetValue ?? 0,
-      }));
+        completedCount,
+      };
+    });
 
       setHabits(habitRows);
       setCategories(categoryRows);

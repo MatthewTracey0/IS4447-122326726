@@ -1,6 +1,7 @@
 import InfoTag from '@/components/ui/info-tag';
 import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import HabitProgressBar from '@/components/ui/progress-bar';
 
 // Used for now, data is split across tables currently
 type Habit = {
@@ -9,6 +10,7 @@ type Habit = {
   categoryName: string;
   frequency: 'weekly' | 'monthly';
   targetValue: number;
+  completedCount: number;
 };
 
 type Props = {
@@ -20,6 +22,7 @@ export default function HabitCard({ habit }: Props) {
   const openDetails = () =>
     router.push({ pathname: '/habit/[id]', params: { id: habit.id.toString() } });
   const habitSummary = `${habit.name}, ${habit.targetValue}, per ${habit.frequency}`;
+  const progress = Math.min(habit.completedCount / habit.targetValue, 1);  // work out % progress
 
   return (
     <Pressable
@@ -40,6 +43,8 @@ export default function HabitCard({ habit }: Props) {
         <InfoTag label="Frequency" value={habit.frequency} />
         <InfoTag label="Target" value={habit.targetValue.toString()} />
       </View>
+
+      <HabitProgressBar progress={progress} />
     </Pressable>
   );
 }

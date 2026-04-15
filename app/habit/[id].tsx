@@ -8,7 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { eq } from 'drizzle-orm';
 import { db } from '@/db/client';
 import { habits as habitsTable, habitLogs } from '@/db/schema';
-import { Habit, HabitContext } from '../_layout';
+import { Habit, HabitWithDetails, HabitContext } from '../_layout';
 
 export default function HabitDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -19,8 +19,12 @@ export default function HabitDetail() {
 
   const { habits, setHabits } = context;
 
-  const habit = habits.find(
-    (h: Habit) => h.id === Number(id)
+  //const habit = habits.find(
+  //  (h: Habit) => h.id === Number(id)
+  //);
+  // find the record in habitsWithDetails, copied from the edit.tsx
+  const habit = context?.habitsWithDetails.find(
+    (h: HabitWithDetails) => h.id === Number(id)
   );
 
   if (!habit) return null;
@@ -51,10 +55,14 @@ export default function HabitDetail() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScreenHeader title={habit.name} subtitle="Habit details" />
+      <ScreenHeader title={habit.name}/>
       <View>
         <Text style={styles.label}>Category</Text>
-        <Text style={styles.value}> {habit.categoryId} </Text>
+        <Text style={styles.value}> {habit.categoryName} </Text>
+        <Text style={styles.label}>Frequency</Text>
+        <Text style={styles.value}> {habit.frequency} </Text>
+        <Text style={styles.label}>Target</Text>
+        <Text style={styles.value}>{habit.completedCount} out of {habit.targetValue}</Text>
       </View>
 
       <PrimaryButton
@@ -83,21 +91,21 @@ const styles = StyleSheet.create({
   safeArea: {
     backgroundColor: '#F8FAFC',
     flex: 1,
-    padding: 20,
+    padding: 20
   },
 
   label: {
     fontSize: 14,
-    color: '#64748B',
+    color: '#64748B'
   },
 
   value: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#0F172A',
+    color: '#0F172A'
   },
 
   buttonSpacing: {
-    marginTop: 10,
+    marginTop: 10
   },
 });

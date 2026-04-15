@@ -44,14 +44,24 @@ type HabitContextType = {
   setHabits: React.Dispatch<React.SetStateAction<Habit[]>>;
   habitsWithDetails: HabitWithDetails[];
   categories: Category[];
+  setCategories: React.Dispatch<React.SetStateAction<Category[]>>;
 };
 
 export const HabitContext = createContext<HabitContextType | null>(null);
+
+const getWeekNumber = (date) => {
+  const firstDay = new Date(date.getFullYear(), 0, 1)
+  const days = Math.floor((date - firstDay) / (24 * 60 * 60 * 1000))
+  return Math.ceil((days + firstDay.getDay() + 1) / 7)
+}
 
 export default function RootLayout() {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [habitsWithDetails, setHabitsWithDetails] = useState<HabitWithDetails[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+
+  const today = new Date();
+  const currentMonth = new Date().getMonth();
 
 useEffect(() => {
     const loadData = async () => {
@@ -74,9 +84,29 @@ useEffect(() => {
     const mappedHabitsWithDetails: HabitWithDetails[] = joinedRows.map((row) => {
 
       // work out filter the number of habitlog records and put into completedcount
-      const completedCount = habitLogRows.filter(
-        log => log.habitId === row.habit.id
-      ).length;
+      const completedCount = habitLogRows.filter(log => {
+        if (log.habitId === row.habit.id && log.value === 1) {
+          const logDate = new Date(log.date);
+
+          if (row.target?.timePeriod === 'weekly') {
+            if (getWeekNumber(logDate) === getWeekNumber(today)) {
+              console.log("timePeriod", row.target?.timePeriod);
+              console.log("week: ", getWeekNumber(logDate));
+              return true;
+            }
+          }
+
+          if (row.timePeriod === 'monthly') {
+            if (logDate.getMonth() === currentMonth) {
+              console.log("timePeriod", row.target?.timePeriod);
+              console.log("month: ", logDate.getMonth());
+              return true;
+            }
+          }
+        }
+
+        return false;
+      }).length;
 
       return {
         id: row.habit.id,
@@ -98,7 +128,7 @@ useEffect(() => {
   }, []);
 
   return (
-    <HabitContext.Provider value={{ habits, habitsWithDetails, setHabits, categories }}>
+    <HabitContext.Provider value={{ habits, habitsWithDetails, setHabits, categories, setCategories }}>
       <Stack />
     </HabitContext.Provider>
   );

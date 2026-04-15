@@ -9,7 +9,7 @@ export const habits = sqliteTable('habits', {
 
 export const habitLogs = sqliteTable('habit_logs', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  habitId: text('habit_id').notNull(),
+  habitId: integer('habit_id').notNull(),
   date: text('date').notNull(),
   value: integer('value').notNull(),
 });

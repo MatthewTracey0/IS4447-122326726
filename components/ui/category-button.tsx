@@ -2,11 +2,12 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 
 type Props = {
   label: string;
+  icon: string;
   selected: boolean;
   onPress: () => void;
 };
 
-export default function CategoryButton({ label, selected, onPress,}: Props) {
+export default function CategoryButton({ label, icon, selected, onPress,}: Props) {
   return (
 
       <Pressable
@@ -23,7 +24,7 @@ export default function CategoryButton({ label, selected, onPress,}: Props) {
                 selected && styles.textSelected
             ]}
         >
-            {label}
+            {label} {icon}
         </Text>
 
       </Pressable>

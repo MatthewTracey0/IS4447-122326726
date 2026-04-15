@@ -55,6 +55,14 @@ export default function IndexScreen() {
         onPress={() => router.push({ pathname: '../add' })}
       />
 
+      <View style={styles.buttonSpacing}>
+        <PrimaryButton
+          label="Manage Categories"
+          variant="secondary"
+          onPress={() => router.push('/category')}
+        />
+      </View>
+
       <TextInput
         value={searchQuery}
         onChangeText={setSearchQuery}
@@ -125,5 +133,9 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     textAlign: 'center',
   },
+
+buttonSpacing: {
+  marginTop: 10,
+},
 
 });

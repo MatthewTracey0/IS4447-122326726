@@ -59,6 +59,7 @@ export default function AddHabit() {
             <CategoryButton
               key={category.id}
               label={category.name}
+              icon={category.icon}
               selected={categoryId === category.id}
               onPress={() => setCategoryId(category.id)}
             />

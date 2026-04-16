@@ -20,11 +20,23 @@ export default function AddCategory() {
   const { setCategories } = context;
 
   const saveCategory = async () => {
-    await db.insert(categoriesTable).values({
-      name,
-      colour,
-      icon,
-    });
+      if (name.trim() === '') {
+        alert('Please enter a category name');
+        return;
+      }
+      if (colour.trim() === '') {
+        alert('Please enter a colour');
+        return;
+      }
+      if (icon.trim() === '') {
+        alert('Please enter an icon');
+        return;
+      }
+      await db.insert(categoriesTable).values({
+        name,
+        colour,
+        icon,
+  });
 
     const rows = await db.select().from(categoriesTable);
     setCategories(rows);

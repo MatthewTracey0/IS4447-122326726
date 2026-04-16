@@ -24,6 +24,26 @@ export default function AddHabit() {
   const { setHabits, categories } = context;
 
   const saveHabit = async () => {
+        if (name.trim() === '') {
+          alert('Please enter a habit name');
+          return;
+        }
+        if (categoryId.trim() === '') {
+          alert('Please select a category');
+        return;
+        }
+        if (targetValue.trim() === '') {
+          alert('Please enter a target value');
+          return;
+        }
+        if (isNaN(Number(targetValue))) {
+          alert('Target value must be a number');
+          return;
+        }
+        if (Number(targetValue) <= 0) {
+          alert('Target value must be greater than 0');
+          return;
+        }
     const [newHabitId] = await db.insert(habitsTable).values({
       name,
       categoryId: Number(categoryId),

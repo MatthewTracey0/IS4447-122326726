@@ -36,6 +36,18 @@ export default function EditCategory() {
   const { setCategories } = context;
 
   const saveChanges = async () => {
+      if (name.trim() === '') {
+        alert('Please enter a category name');
+        return;
+      }
+      if (colour.trim() === '') {
+        alert('Please enter a colour');
+        return;
+      }
+      if (icon.trim() === '') {
+        alert('Please enter an icon');
+        return;
+      }
     await db
       .update(categoriesTable)
       .set({ name, colour, icon })

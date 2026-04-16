@@ -30,6 +30,7 @@ const deleteCategory = async () => {
     (habit) => habit.categoryId === Number(id)
   );
 
+// Stop the delete if the category is still in use
   if (linkedHabits.length > 0) {
     alert('You cant delete this category because it is being used by a habit');
     return;
@@ -39,6 +40,7 @@ const deleteCategory = async () => {
     .delete(categoriesTable)
     .where(eq(categoriesTable.id, Number(id)));
 
+// Reload the category and update the context
   const rows = await db.select().from(categoriesTable);
   setCategories(rows);
   router.back();

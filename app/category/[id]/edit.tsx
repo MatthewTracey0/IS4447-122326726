@@ -48,6 +48,7 @@ export default function EditCategory() {
         alert('Please enter an icon');
         return;
       }
+    // Update the category in the database
     await db
       .update(categoriesTable)
       .set({ name, colour, icon })

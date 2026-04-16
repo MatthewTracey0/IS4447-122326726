@@ -17,7 +17,7 @@ export default function CategoryButton({ label, icon, selected, onPress,}: Props
           selected && styles.buttonSelected
         ]}
       >
-
+        {/* Show the category name and icon */}
         <Text
             style={[
                 styles.text,

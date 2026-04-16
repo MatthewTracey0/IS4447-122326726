@@ -23,12 +23,13 @@ export default function AddHabit() {
   if (!context) return null;
   const { setHabits, categories } = context;
 
+// Making sure the user inputs text/number
   const saveHabit = async () => {
         if (name.trim() === '') {
           alert('Please enter a habit name');
           return;
         }
-        if (categoryId.trim() === '') {
+        if (categoryId === null) {
           alert('Please select a category');
         return;
         }
@@ -44,6 +45,7 @@ export default function AddHabit() {
           alert('Target value must be greater than 0');
           return;
         }
+    // Insert the new habit into the habits table
     const [newHabitId] = await db.insert(habitsTable).values({
       name,
       categoryId: Number(categoryId),

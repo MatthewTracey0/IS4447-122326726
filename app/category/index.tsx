@@ -26,6 +26,7 @@ export default function IndexScreen() {
         onPress={() => router.push({ pathname: '/category/add' })}
       />
 
+      {/* List of all categories */}
       <ScrollView
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
@@ -44,6 +45,7 @@ export default function IndexScreen() {
                 })
               }
             >
+              {/* Show the category icon, name and colour */}
               <Text style={styles.categoryIcon}>{category.icon}</Text>
               <View>
                 <Text style={styles.categoryName}>{category.name}</Text>

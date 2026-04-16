@@ -39,6 +39,7 @@ export type HabitWithDetails = {
   completedCount: number;
 };
 
+// Shape of the data across the app
 type HabitContextType = {
   habits: Habit[];
   setHabits: React.Dispatch<React.SetStateAction<Habit[]>>;
@@ -49,6 +50,7 @@ type HabitContextType = {
 
 export const HabitContext = createContext<HabitContextType | null>(null);
 
+// Function to work out which week of the year a date is in
 const getWeekNumber = (date) => {
   const firstDay = new Date(date.getFullYear(), 0, 1)
   const days = Math.floor((date - firstDay) / (24 * 60 * 60 * 1000))
@@ -67,6 +69,7 @@ useEffect(() => {
     const loadData = async () => {
       await seedHabitsIfEmpty();
 
+      // Load the basic tables
       const habitRows = await db.select().from(habitsTable);
       const categoryRows = await db.select().from(categoriesTable);
       const habitLogRows = await db.select().from(habitLogsTable);
@@ -88,6 +91,7 @@ useEffect(() => {
         if (log.habitId === row.habit.id && log.value === 1) {
           const logDate = new Date(log.date);
 
+          // For weekly habits, only count logs from this week
           if (row.target?.timePeriod === 'weekly') {
             if (getWeekNumber(logDate) === getWeekNumber(today)) {
               console.log("timePeriod", row.target?.timePeriod);
@@ -96,6 +100,7 @@ useEffect(() => {
             }
           }
 
+          // For monthly habits, only count logs from this month
           if (row.timePeriod === 'monthly') {
             if (logDate.getMonth() === currentMonth) {
               console.log("timePeriod", row.target?.timePeriod);

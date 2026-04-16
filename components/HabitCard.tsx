@@ -19,6 +19,7 @@ type Props = {
 
 export default function HabitCard({ habit }: Props) {
   const router = useRouter();
+  // Opens the habit detail page when the card is pressed
   const openDetails = () =>
     router.push({ pathname: '/habit/[id]', params: { id: habit.id.toString() } });
   const habitSummary = `${habit.name}, ${habit.targetValue}, per ${habit.frequency}`;

@@ -8,6 +8,7 @@ type Props = {
 
 export default function FrequencyButton({ selectedId, setSelectedId }: Props) {
 
+  // Creating the two frequency options
   const radioButtons: RadioButtonProps[] = useMemo(() => ([
     {
       id: 'weekly',
@@ -22,6 +23,7 @@ export default function FrequencyButton({ selectedId, setSelectedId }: Props) {
   ]), []);
 
   return (
+    // Show the weekly and monthly radio buttons
     <RadioGroup
       radioButtons={radioButtons}
       selectedId={selectedId}

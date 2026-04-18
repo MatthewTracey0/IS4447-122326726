@@ -1,6 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useContext } from 'react';
-import InfoTag from '@/components/ui/info-tag';
 import PrimaryButton from '@/components/ui/primary-button';
 import ScreenHeader from '@/components/ui/screen-header';
 import { StyleSheet, View, Text } from 'react-native';
@@ -8,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { eq } from 'drizzle-orm';
 import { db } from '@/db/client';
 import { habits as habitsTable, habitLogs } from '@/db/schema';
-import { Habit, HabitWithDetails, HabitContext } from '../_layout';
+import { HabitWithDetails, HabitContext } from '../_layout';
 
 export default function HabitDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -17,7 +16,7 @@ export default function HabitDetail() {
 
   if (!context) return null;
 
-  const { habits, setHabits } = context;
+  const { loadData  } = context;
 
   //const habit = habits.find(
   //  (h: Habit) => h.id === Number(id)
@@ -39,6 +38,7 @@ export default function HabitDetail() {
     });
 
     console.log('habit logged');
+    await loadData();
     router.back();
   };
 
@@ -48,8 +48,7 @@ export default function HabitDetail() {
       .delete(habitsTable)
       .where(eq(habitsTable.id, Number(id)));
 
-    const rows = await db.select().from(habitsTable);
-    setHabits(rows);
+    await loadData();
     router.back();
   };
 

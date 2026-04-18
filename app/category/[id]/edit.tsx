@@ -15,7 +15,6 @@ export default function EditCategory() {
   const router = useRouter();
   const context = useContext(HabitContext);
   const [name, setName] = useState('');
-  const [colour, setColour] = useState('');
   const [icon, setIcon] = useState('');
 
   const category = context?.categories.find(
@@ -25,7 +24,6 @@ export default function EditCategory() {
   useEffect(() => {
     if (!category) return;
     setName(category.name);
-    setColour(category.colour);
     setIcon(category.icon);
 
     console.log("category record is ", category);
@@ -33,15 +31,11 @@ export default function EditCategory() {
 
   if (!context || !category) return null;
 
-  const { setCategories } = context;
+  const { loadData  } = context;
 
   const saveChanges = async () => {
       if (name.trim() === '') {
         alert('Please enter a category name');
-        return;
-      }
-      if (colour.trim() === '') {
-        alert('Please enter a colour');
         return;
       }
       if (icon.trim() === '') {
@@ -51,14 +45,12 @@ export default function EditCategory() {
     // Update the category in the database
     await db
       .update(categoriesTable)
-      .set({ name, colour, icon })
+      .set({ name, icon })
       .where(eq(categoriesTable.id, Number(id)));
 
     console.log("updated data");
 
-    const rows = await db.select().from(categoriesTable);
-    setCategories(rows);
-
+    await loadData();
     router.back();
   };
 
@@ -67,7 +59,6 @@ export default function EditCategory() {
       <ScreenHeader title="Edit Category" subtitle={`Update ${category.name}`} />
       <View style={styles.form}>
         <FormField label="Category name" value={name} onChangeText={setName} />
-        <FormField label="Colour" value={colour} onChangeText={setColour} />
         <FormField label="Icon" value={icon} onChangeText={setIcon} />
       </View>
 

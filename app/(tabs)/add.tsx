@@ -21,7 +21,7 @@ export default function AddHabit() {
   const [targetValue, setTargetValue] = useState('');
 
   if (!context) return null;
-  const { setHabits, categories } = context;
+  const { loadData, categories } = context;
 
 // Making sure the user inputs text/number
   const saveHabit = async () => {
@@ -60,8 +60,7 @@ export default function AddHabit() {
        targetValue: Number(targetValue)
     });
 
-    const rows = await db.select().from(habitsTable);
-    setHabits(rows);
+    await loadData();
     router.back();
   };
 

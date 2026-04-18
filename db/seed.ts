@@ -9,10 +9,10 @@ export async function seedHabitsIfEmpty() {
   }
 
   await db.insert(categories).values([
-    { name: 'Sleep', colour: '#4d22c5', icon: '😴'},
-    { name: 'Health', colour: '#c5222d', icon: '❤️'},
-    { name: 'Study', colour: '#2269c5', icon: '📚'},
-    { name: 'Hobbies', colour: '#71c522', icon: '🎸'},
+    { name: 'Sleep', icon: '😴'},
+    { name: 'Health', icon: '❤️'},
+    { name: 'Study', icon: '📚'},
+    { name: 'Hobbies', icon: '🎸'},
   ]);
 
 

@@ -41,7 +41,7 @@ export default function EditHabit() {
 
   if (!context || !habit) return null;
 
-  const { setHabits } = context;
+  const { loadData  } = context;
 
   const saveChanges = async () => {
         if (name.trim() === '') {
@@ -76,9 +76,7 @@ export default function EditHabit() {
 
     console.log("updated data");
 
-    const rows = await db.select().from(habitsTable);
-    setHabits(rows);
-
+    await loadData();
     router.back();
   };
 
@@ -92,6 +90,7 @@ export default function EditHabit() {
               <CategoryButton
                 key={category.id}
                 label={category.name}
+                icon={category.icon}
                 selected={Number(categoryId) === category.id}
                 onPress={() => setCategoryId(String(category.id))}
               />

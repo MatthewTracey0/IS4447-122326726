@@ -45,11 +45,10 @@ export default function IndexScreen() {
                 })
               }
             >
-              {/* Show the category icon, name and colour */}
+              {/* Show the category icon and name */}
               <Text style={styles.categoryIcon}>{category.icon}</Text>
               <View>
                 <Text style={styles.categoryName}>{category.name}</Text>
-                <Text style={styles.categoryColour}>{category.colour}</Text>
               </View>
             </Pressable>
           ))

@@ -18,7 +18,6 @@ export type Habit = {
 export type Category = {
   id: number;
   name: string;
-  colour: string;
   icon: string;
 };
 
@@ -46,6 +45,7 @@ type HabitContextType = {
   habitsWithDetails: HabitWithDetails[];
   categories: Category[];
   setCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+  loadData: () => Promise<void>;
 };
 
 export const HabitContext = createContext<HabitContextType | null>(null);
@@ -65,7 +65,6 @@ export default function RootLayout() {
   const today = new Date();
   const currentMonth = new Date().getMonth();
 
-useEffect(() => {
     const loadData = async () => {
       await seedHabitsIfEmpty();
 
@@ -73,6 +72,8 @@ useEffect(() => {
       const habitRows = await db.select().from(habitsTable);
       const categoryRows = await db.select().from(categoriesTable);
       const habitLogRows = await db.select().from(habitLogsTable);
+
+        console.log("cat: ", categoryRows)
 
       const joinedRows = await db
         .select({
@@ -101,7 +102,7 @@ useEffect(() => {
           }
 
           // For monthly habits, only count logs from this month
-          if (row.timePeriod === 'monthly') {
+          if (row.target?.timePeriod === 'monthly') {
             if (logDate.getMonth() === currentMonth) {
               console.log("timePeriod", row.target?.timePeriod);
               console.log("month: ", logDate.getMonth());
@@ -129,11 +130,12 @@ useEffect(() => {
       setHabitsWithDetails(mappedHabitsWithDetails);
     };
 
+  useEffect(() => {
     void loadData();
   }, []);
 
   return (
-    <HabitContext.Provider value={{ habits, habitsWithDetails, setHabits, categories, setCategories }}>
+    <HabitContext.Provider value={{ habits, habitsWithDetails, setHabits, categories, setCategories, loadData }}>
       <Stack />
     </HabitContext.Provider>
   );

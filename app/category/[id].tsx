@@ -16,7 +16,7 @@ export default function CategoryDetail() {
 
   if (!context) return null;
 
-  const { categories, habits, setCategories } = context;
+  const { categories, habits, loadData  } = context;
 
   const category = categories.find(
     (c) => c.id === Number(id)
@@ -41,8 +41,7 @@ const deleteCategory = async () => {
     .where(eq(categoriesTable.id, Number(id)));
 
 // Reload the category and update the context
-  const rows = await db.select().from(categoriesTable);
-  setCategories(rows);
+  await loadData();
   router.back();
 };
 
@@ -50,8 +49,6 @@ const deleteCategory = async () => {
     <SafeAreaView style={styles.safeArea}>
       <ScreenHeader title={category.name} />
       <View>
-        <Text style={styles.label}>Colour</Text>
-        <Text style={styles.value}>{category.colour}</Text>
         <Text style={styles.label}>Icon</Text>
         <Text style={styles.value}>{category.icon}</Text>
       </View>

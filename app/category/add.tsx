@@ -13,19 +13,14 @@ export default function AddCategory() {
   const router = useRouter();
   const context = useContext(HabitContext);
   const [name, setName] = useState('');
-  const [colour, setColour] = useState('');
   const [icon, setIcon] = useState('');
 
   if (!context) return null;
-  const { setCategories } = context;
+  const { loadData  } = context;
 
   const saveCategory = async () => {
       if (name.trim() === '') {
         alert('Please enter a category name');
-        return;
-      }
-      if (colour.trim() === '') {
-        alert('Please enter a colour');
         return;
       }
       if (icon.trim() === '') {
@@ -34,12 +29,10 @@ export default function AddCategory() {
       }
       await db.insert(categoriesTable).values({
         name,
-        colour,
         icon,
   });
 
-    const rows = await db.select().from(categoriesTable);
-    setCategories(rows);
+    await loadData();
     router.back();
   };
 
@@ -52,7 +45,6 @@ export default function AddCategory() {
         <ScreenHeader title="Add Category" subtitle="Create a new category." />
         <View style={styles.form}>
           <FormField label="Category Name" value={name} onChangeText={setName} />
-          <FormField label="Colour" value={colour} onChangeText={setColour} />
           <FormField label="Icon" value={icon} onChangeText={setIcon} />
         </View>
 

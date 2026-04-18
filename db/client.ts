@@ -4,6 +4,7 @@ import { openDatabaseSync } from 'expo-sqlite';
 const sqlite = openDatabaseSync('habits.db');
 
 sqlite.execSync(`
+
   CREATE TABLE IF NOT EXISTS habits (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -21,7 +22,6 @@ sqlite.execSync(`
   CREATE TABLE IF NOT EXISTS categories (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    colour TEXT NOT NULL,
     icon TEXT NOT NULL
   );
 

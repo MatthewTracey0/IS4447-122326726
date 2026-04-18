@@ -17,7 +17,6 @@ export const habitLogs = sqliteTable('habit_logs', {
 export const categories = sqliteTable('categories', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull(),
-  colour: text('colour').notNull(),
   icon: text('icon').notNull(),
 });
 

@@ -16,14 +16,14 @@ export default function IndexScreen() {
 
   if (!context) return null;
 
-  const { habitsWithDetails, categories } = context;
+  const { habitsWithDetails, } = context;
   const normalizedQuery = searchQuery.trim().toLowerCase();
   const categoryOptions = [
-    'All',
-    'Sleep',
-    'Health',
-    'Study',
-    'Hobbies',
+    { label: 'All', icon: '' },
+    { label: 'Sleep', icon: '😴' },
+    { label: 'Health', icon: '❤️' },
+    { label: 'Study', icon: '📚' },
+    { label: 'Hobbies', icon: '🎸' },
   ];
 
   const filteredHabits = habitsWithDetails.filter((habit: HabitWithDetails) => {
@@ -34,12 +34,8 @@ export default function IndexScreen() {
 // Used to check when a user clicks 'Sleep' button, and the habit belongs to category 1, its then shown
     const matchesCategory =
       selectedCategory === 'All' ||
-    (
-        selectedCategory === 'Sleep' && habit.categoryId === 1 ||
-        selectedCategory === 'Health' && habit.categoryId === 2 ||
-        selectedCategory === 'Study' && habit.categoryId === 3 ||
-        selectedCategory === 'Hobbies' && habit.categoryId === 4
-    );
+    habit.categoryName === selectedCategory;
+
     return matchesSearch && matchesCategory;
   });
 
@@ -73,10 +69,11 @@ export default function IndexScreen() {
       <View style={styles.filterRow}>
          {categoryOptions.map(category => (
            <CategoryButton
-             key={category}
-             label={category}
-             selected={selectedCategory === category}
-             onPress={() => setSelectedCategory(category)}
+             key={category.label}
+             label={category.label}
+             icon={category.icon}
+             selected={selectedCategory === category.label}
+             onPress={() => setSelectedCategory(category.label)}
            />
          ))}
       </View>

@@ -24,7 +24,8 @@ export default function CategoryButton({ label, icon, selected, onPress,}: Props
                 selected && styles.textSelected
             ]}
         >
-            {label} {icon}
+           {label} {icon}
+
         </Text>
 
       </Pressable>

@@ -73,7 +73,8 @@ export default function RootLayout() {
       const categoryRows = await db.select().from(categoriesTable);
       const habitLogRows = await db.select().from(habitLogsTable);
 
-        console.log("cat: ", categoryRows)
+      const targetRows = await db.select().from(targetsTable);
+      console.log("habitLogRows rows: ", habitLogRows)
 
       const joinedRows = await db
         .select({
@@ -136,7 +137,14 @@ export default function RootLayout() {
 
   return (
     <HabitContext.Provider value={{ habits, habitsWithDetails, setHabits, categories, setCategories, loadData }}>
-      <Stack />
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="category/index" options={{ title: '', headerBackTitleVisible: false }} />
+        <Stack.Screen name="category/add" options={{ title: '', headerBackTitleVisible: false }} />
+        <Stack.Screen name="category/[id]" options={{ title: '', headerBackTitleVisible: false }} />
+        <Stack.Screen name="habit/[id]" options={{ title: '', headerBackTitleVisible: false }} />
+        <Stack.Screen name="habit/[id]/edit" options={{ title: '', headerBackTitleVisible: false }} />
+      </Stack>
     </HabitContext.Provider>
   );
 }

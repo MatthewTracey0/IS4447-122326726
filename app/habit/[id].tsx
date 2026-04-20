@@ -18,9 +18,6 @@ export default function HabitDetail() {
 
   const { loadData  } = context;
 
-  //const habit = habits.find(
-  //  (h: Habit) => h.id === Number(id)
-  //);
   // find the record in habitsWithDetails, copied from the edit.tsx
   const habit = context?.habitsWithDetails.find(
     (h: HabitWithDetails) => h.id === Number(id)
@@ -37,7 +34,7 @@ export default function HabitDetail() {
       value: 1
     });
 
-    console.log('habit logged');
+    console.log('habit logged', habit.id);
     await loadData();
     router.back();
   };
@@ -55,15 +52,25 @@ export default function HabitDetail() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScreenHeader title={habit.name}/>
-      <View>
-        <Text style={styles.label}>Category</Text>
-        <Text style={styles.value}> {habit.categoryName} </Text>
-        <Text style={styles.label}>Frequency</Text>
-        <Text style={styles.value}> {habit.frequency} </Text>
-        <Text style={styles.label}>Target</Text>
-        <Text style={styles.value}>{habit.completedCount} out of {habit.targetValue}</Text>
+
+      <View style={styles.detailsSection}>
+        <View style={styles.infoBlock}>
+            <Text style={styles.label}>Category</Text>
+            <Text style={styles.value}> {habit.categoryName} </Text>
+        </View>
+
+        <View style={styles.infoBlock}>
+            <Text style={styles.label}>Frequency</Text>
+            <Text style={styles.value}> {habit.frequency} </Text>
+        </View>
+
+        <View style={styles.infoBlock}>
+            <Text style={styles.label}>Target</Text>
+            <Text style={styles.value}>{habit.completedCount} out of {habit.targetValue}</Text>
+        </View>
       </View>
 
+    <View style={styles.buttonGroup}>
       <PrimaryButton
         label="Log Habit Completed" onPress={logHabitToday}
       />
@@ -82,6 +89,7 @@ export default function HabitDetail() {
       <View style={styles.buttonSpacing}>
         <PrimaryButton label="Delete Habit" variant="secondary" onPress={deleteHabit} />
       </View>
+    </View>
     </SafeAreaView>
   );
 }
@@ -95,7 +103,8 @@ const styles = StyleSheet.create({
 
   label: {
     fontSize: 14,
-    color: '#64748B'
+    color: '#64748B',
+    marginBottom: 2
   },
 
   value: {
@@ -105,6 +114,20 @@ const styles = StyleSheet.create({
   },
 
   buttonSpacing: {
-    marginTop: 10
+    marginTop: 14
   },
+
+  detailsSection: {
+    marginTop: 12,
+    marginBottom: 24,
+  },
+
+  infoBlock: {
+    marginBottom: 16,
+  },
+
+buttonGroup: {
+  marginTop: 8,
+},
+
 });

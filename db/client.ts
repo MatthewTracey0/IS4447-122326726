@@ -32,6 +32,13 @@ sqlite.execSync(`
     target_value INTEGER NOT NULL
   );
 
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  password TEXT NOT NULL
+);
+
 `);
 
 export const db = drizzle(sqlite);

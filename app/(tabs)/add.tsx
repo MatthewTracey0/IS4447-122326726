@@ -21,6 +21,7 @@ export default function AddHabit() {
   const [targetValue, setTargetValue] = useState('');
 
   if (!context) return null;
+
   const { loadData, categories } = context;
 
 // Making sure the user inputs text/number

@@ -26,3 +26,10 @@ export const targets = sqliteTable('targets', {
   timePeriod: text('time_period').notNull(),
   targetValue: integer('target_value').notNull()
 });
+
+export const users = sqliteTable('users', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  username: text('username').notNull(),
+  email: text('email').notNull(),
+  password: text('password').notNull(),
+});

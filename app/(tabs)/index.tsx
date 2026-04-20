@@ -4,7 +4,7 @@ import ScreenHeader from '@/components/ui/screen-header';
 import CategoryButton from '@/components/ui/category-button';
 import { useRouter } from 'expo-router';
 import { useContext, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HabitWithDetails, HabitContext } from '../_layout';
 
@@ -41,10 +41,20 @@ export default function IndexScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScreenHeader
-        title="Habits"
-        subtitle={`${habitsWithDetails.length} habits tracked`}
-      />
+      <View style={styles.topRow}>
+        <Image
+          source={require('../../assets/images/Habitrak-Logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+
+        <View style={styles.headerTextContainer}>
+          <ScreenHeader
+            title="Habits"
+            subtitle={`${habitsWithDetails.length} habits tracked`}
+          />
+        </View>
+      </View>
 
       <PrimaryButton
         label="Add Habit"
@@ -67,15 +77,15 @@ export default function IndexScreen() {
       />
 
       <View style={styles.filterRow}>
-         {categoryOptions.map(category => (
-           <CategoryButton
-             key={category.label}
-             label={category.label}
-             icon={category.icon}
-             selected={selectedCategory === category.label}
-             onPress={() => setSelectedCategory(category.label)}
-           />
-         ))}
+        {categoryOptions.map(category => (
+          <CategoryButton
+            key={category.label}
+            label={category.label}
+            icon={category.icon}
+            selected={selectedCategory === category.label}
+            onPress={() => setSelectedCategory(category.label)}
+          />
+        ))}
       </View>
 
       <ScrollView
@@ -86,7 +96,7 @@ export default function IndexScreen() {
           <Text style={styles.emptyText}>No habits match your filters</Text>
         ) : (
           filteredHabits.map((habit: HabitWithDetails) => (
-              <HabitCard key={habit.id} habit={habit} />
+            <HabitCard key={habit.id} habit={habit} />
           ))
         )}
       </ScrollView>
@@ -100,6 +110,24 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 18,
     paddingTop: 10,
+  },
+
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 6,
+    marginBottom: 14,
+  },
+
+  headerTextContainer: {
+    marginLeft: 12,
+    marginTop: 16,
+  },
+
+  logo: {
+    width: 60,
+    height: 60,
   },
 
   listContent: {
@@ -131,8 +159,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-buttonSpacing: {
-  marginTop: 10,
-},
+  buttonSpacing: {
+    marginTop: 10,
+  },
 
 });

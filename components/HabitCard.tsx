@@ -11,6 +11,7 @@ type Habit = {
   frequency: 'weekly' | 'monthly';
   targetValue: number;
   completedCount: number;
+  streakCount: number;
 };
 
 type Props = {
@@ -37,6 +38,7 @@ export default function HabitCard({ habit }: Props) {
     >
       <View>
         <Text style={styles.name}>{habit.name}</Text>
+        <Text style={styles.streak}>Streak: {habit.streakCount}</Text>
       </View>
 
       <View style={styles.tags}>
@@ -72,4 +74,11 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     marginTop: 10,
   },
+
+streak: {
+  color: '#475569',
+  fontSize: 14,
+  marginTop: 4,
+},
+
 });

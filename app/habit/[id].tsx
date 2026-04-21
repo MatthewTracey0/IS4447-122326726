@@ -67,6 +67,22 @@ export default function HabitDetail() {
         <View style={styles.infoBlock}>
             <Text style={styles.label}>Target</Text>
             <Text style={styles.value}>{habit.completedCount} out of {habit.targetValue}</Text>
+
+              {habit.completedCount < habit.targetValue && (
+                <Text style={styles.statusText}>
+                  Target not met yet, Keep Going!
+                </Text>
+              )}
+              {habit.completedCount === habit.targetValue && (
+                <Text style={styles.statusText}>
+                  Target met, Well Done!
+                </Text>
+              )}
+              {habit.completedCount > habit.targetValue && (
+                <Text style={styles.statusText}>
+                  Target exceeded, Great Job!
+                </Text>
+              )}
         </View>
       </View>
 
@@ -128,6 +144,13 @@ const styles = StyleSheet.create({
 
 buttonGroup: {
   marginTop: 8,
+},
+
+statusText: {
+  fontSize: 16,
+  fontWeight: '700',
+  color: '#64748B',
+  marginTop: 18,
 },
 
 });

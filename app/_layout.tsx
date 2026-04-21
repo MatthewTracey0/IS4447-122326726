@@ -28,6 +28,13 @@ export type Target = {
   targetValue: number;
 };
 
+export type HabitLog = {
+  id: number;
+  habitId: number;
+  date: string;
+  value: number;
+};
+
 export type HabitWithDetails = {
   id: number;
   name: string;
@@ -45,6 +52,7 @@ type HabitContextType = {
   habitsWithDetails: HabitWithDetails[];
   categories: Category[];
   setCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+  habitLogs: HabitLog[];
   loadData: () => Promise<void>;
 };
 
@@ -61,6 +69,7 @@ export default function RootLayout() {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [habitsWithDetails, setHabitsWithDetails] = useState<HabitWithDetails[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [habitLogs, setHabitLogs] = useState<HabitLog[]>([]);
 
   const today = new Date();
   const currentMonth = new Date().getMonth();
@@ -129,6 +138,7 @@ export default function RootLayout() {
       setHabits(habitRows);
       setCategories(categoryRows);
       setHabitsWithDetails(mappedHabitsWithDetails);
+      setHabitLogs(habitLogRows);
     };
 
   useEffect(() => {
@@ -136,7 +146,7 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <HabitContext.Provider value={{ habits, habitsWithDetails, setHabits, categories, setCategories, loadData }}>
+    <HabitContext.Provider value={{ habits, habitsWithDetails, setHabits, categories, setCategories, habitLogs, loadData }}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="category/index" options={{ title: '', headerBackTitleVisible: false }} />

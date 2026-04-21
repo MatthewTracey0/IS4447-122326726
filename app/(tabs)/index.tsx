@@ -8,6 +8,23 @@ import { Pressable, ScrollView, StyleSheet, Text, TextInput, View, Image } from 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HabitWithDetails, HabitContext } from '../_layout';
 
+function getHabitStreak(habitId: number, logs: any[]) {
+  // Getting the logs for the specific habit
+  const habitLogs = logs.filter((log) => log.habitId === habitId);
+
+  // Changes the log date to a simple date
+  const loggedDays = habitLogs.map((log) =>
+    new Date(log.date).toISOString().slice(0, 10)
+  );
+  let streak = 0;
+  const currentDate = new Date();
+  while (loggedDays.includes(currentDate.toISOString().slice(0, 10))) {
+    streak = streak + 1;
+    currentDate.setDate(currentDate.getDate() - 1);
+  }
+  return streak;
+}
+
 export default function IndexScreen() {
   const router = useRouter();
   const context = useContext(HabitContext);
@@ -16,7 +33,7 @@ export default function IndexScreen() {
 
   if (!context) return null;
 
-  const { habitsWithDetails, } = context;
+  const { habitsWithDetails, habitLogs } = context;
   const normalizedQuery = searchQuery.trim().toLowerCase();
   const categoryOptions = [
     { label: 'All', icon: '' },
@@ -38,6 +55,17 @@ export default function IndexScreen() {
 
     return matchesSearch && matchesCategory;
   });
+
+  const habitsWithStreak = filteredHabits.map((habit: HabitWithDetails) => ({
+    id: habit.id,
+    name: habit.name,
+    categoryId: habit.categoryId,
+    categoryName: habit.categoryName,
+    frequency: habit.frequency,
+    targetValue: habit.targetValue,
+    completedCount: habit.completedCount,
+    streakCount: getHabitStreak(habit.id, habitLogs),
+  }));
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -92,10 +120,10 @@ export default function IndexScreen() {
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
       >
-        {filteredHabits.length === 0 ? (
+        {habitsWithStreak.length === 0 ? (
           <Text style={styles.emptyText}>No habits match your filters</Text>
         ) : (
-          filteredHabits.map((habit: HabitWithDetails) => (
+          habitsWithStreak.map((habit: HabitWithDetails & { streakCount: number }) => (
             <HabitCard key={habit.id} habit={habit} />
           ))
         )}

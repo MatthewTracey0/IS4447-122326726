@@ -177,6 +177,12 @@ const completedLogs = habitLogs.filter(
             <Text style={styles.selectedHabitText}>
               Category: {selectedHabit.categoryName}
             </Text>
+            <Text style={styles.selectedHabitText}>
+              Frequency: {selectedHabit.frequency}
+            </Text>
+            <Text style={styles.selectedHabitText}>
+              Target: {selectedHabit.targetValue}
+            </Text>
           </View>
         )}
 

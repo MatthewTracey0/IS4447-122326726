@@ -113,7 +113,7 @@ const completedLogs = habitLogs.filter(
     endOfWeek.setDate(endOfWeek.getDate() + 6);
     endOfWeek.setHours(23, 59, 59, 999);
 
-    weeklyLabels.push(`W${4 - i}`);
+    weeklyLabels.push(`Wk${4 - i}`);
 
     // Count completed logs in that week
     const count = completedLogs.filter(log => {

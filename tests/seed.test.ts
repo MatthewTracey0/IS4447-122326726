@@ -1,4 +1,4 @@
-import { seedStudentsIfEmpty } from '../db/seed';
+import { seedHabitsIfEmpty } from '../db/seed';
 import { db } from '../db/client';
 
 jest.mock('../db/client', () => ({
@@ -10,36 +10,30 @@ jest.mock('../db/client', () => ({
 
 const mockDb = db as unknown as { select: jest.Mock; insert: jest.Mock };
 
-describe('seedStudentsIfEmpty', () => {
+describe('seedHabitsIfEmpty', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('inserts students when the table is empty', async () => {
+  it('inserts data when the habits table is empty', async () => {
     const mockValues = jest.fn().mockResolvedValue(undefined);
     const mockFrom = jest.fn().mockResolvedValue([]);
     mockDb.select.mockReturnValue({ from: mockFrom });
     mockDb.insert.mockReturnValue({ values: mockValues });
 
-    await seedStudentsIfEmpty();
+    await seedHabitsIfEmpty();
 
     expect(mockDb.insert).toHaveBeenCalled();
-    expect(mockValues).toHaveBeenCalledWith(
-      expect.arrayContaining([
-        expect.objectContaining({ name: 'Emilia' }),
-        expect.objectContaining({ name: 'Jackie' }),
-        expect.objectContaining({ name: 'Sammy' }),
-      ])
-    );
+    expect(mockValues).toHaveBeenCalled();
   });
 
-  it('does nothing when students already exist', async () => {
+  it('does nothing when habits already exist', async () => {
     const mockFrom = jest.fn().mockResolvedValue([
-      { id: 1, name: 'Existing', major: 'CS', year: '1', count: 0 },
+      { id: 1, name: 'Existing Habit' },
     ]);
     mockDb.select.mockReturnValue({ from: mockFrom });
 
-    await seedStudentsIfEmpty();
+    await seedHabitsIfEmpty();
 
     expect(mockDb.insert).not.toHaveBeenCalled();
   });

@@ -83,7 +83,7 @@ export default function RootLayout() {
       const habitLogRows = await db.select().from(habitLogsTable);
 
       const targetRows = await db.select().from(targetsTable);
-      console.log("habitLogRows rows: ", habitLogRows)
+      console.log("cat rows: ", categoryRows)
 
       const joinedRows = await db
         .select({

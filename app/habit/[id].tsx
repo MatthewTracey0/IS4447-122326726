@@ -1,18 +1,20 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import PrimaryButton from '@/components/ui/primary-button';
 import ScreenHeader from '@/components/ui/screen-header';
 import { StyleSheet, View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { eq } from 'drizzle-orm';
 import { db } from '@/db/client';
-import { habits as habitsTable, habitLogs } from '@/db/schema';
+import { habits as habitsTable, habitLogs, targets as targetsTable } from '@/db/schema';
 import { HabitWithDetails, HabitContext } from '../_layout';
 
 export default function HabitDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const context = useContext(HabitContext);
+  const api_url = "https://zenquotes.io/api/quotes/";
+  const [quote, setQuote] = useState('');
 
   if (!context) return null;
 
@@ -23,9 +25,7 @@ export default function HabitDetail() {
     (h: HabitWithDetails) => h.id === Number(id)
   );
 
-  if (!habit) return null;
-
-// log completed
+  // log completed
   const logHabitToday = async () => {
 
     await db.insert(habitLogs).values({
@@ -39,8 +39,16 @@ export default function HabitDetail() {
     router.back();
   };
 
-// habit deleted
+  // habitlogs, target and habit deleted
   const deleteHabit = async () => {
+    await db
+      .delete(habitLogs)
+      .where(eq(habitLogs.habitId, Number(id)));
+
+    await db
+      .delete(targetsTable)
+      .where(eq(targetsTable.habitId, Number(id)));
+
     await db
       .delete(habitsTable)
       .where(eq(habitsTable.id, Number(id)));
@@ -48,6 +56,27 @@ export default function HabitDetail() {
     await loadData();
     router.back();
   };
+
+  // inspiration quote api from zenquotes - no api key needed
+  const getQuote = async () => {
+    try {
+      const response = await fetch(api_url);
+      const data = await response.json();
+
+      if (data) {
+        // q is for it to return the quote
+        setQuote(data[0].q);
+      }
+    } catch (error) {
+      console.log("Error fetching quote:", error);
+    }
+  };
+
+  useEffect(() => {
+    getQuote();
+  }, []);
+
+  if (!habit) return null;
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -83,6 +112,9 @@ export default function HabitDetail() {
                   Target exceeded, Great Job!
                 </Text>
               )}
+
+              <Text style={styles.quoteText}>Inspirational Quote - {quote}</Text>
+
         </View>
       </View>
 
@@ -149,8 +181,14 @@ buttonGroup: {
 statusText: {
   fontSize: 16,
   fontWeight: '700',
-  color: '#64748B',
+  color: '#0000FF',
   marginTop: 18,
+},
+
+quoteText: {
+  fontSize: 14,
+  color: '#64748B',
+  marginTop: 26,
 },
 
 });

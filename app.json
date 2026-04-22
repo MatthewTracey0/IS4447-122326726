@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "4447-122326726",
+    "name": "Habitrak",
     "slug": "4447-122326726",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -24,14 +24,14 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/Habitrak-Logo.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/Habitrak-Logo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",

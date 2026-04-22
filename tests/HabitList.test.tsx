@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { StudentContext } from '../app/_layout';
+import { HabitContext } from '../app/_layout';
 import IndexScreen from '../app/(tabs)/index';
 
 jest.mock('@/db/client', () => ({
@@ -19,23 +19,25 @@ jest.mock('react-native-safe-area-context', () => {
   return { SafeAreaView: View };
 });
 
-const mockStudent = {
+const mockHabit = {
   id: 1,
-  name: 'Test Student',
-  major: 'Computer Science',
-  year: '3',
-  count: 0,
+  name: 'Drink Water',
+  categoryId: 1,
+  categoryName: 'Health',
+  frequency: 'weekly',
+  targetValue: 8,
+  completedCount: 3,
 };
 
 describe('IndexScreen', () => {
-  it('renders the student and the add button', () => {
+  it('renders the habit and the add button', () => {
     const { getByText } = render(
-      <StudentContext.Provider value={{ students: [mockStudent], setStudents: jest.fn() }}>
+      <HabitContext.Provider value={{ habits: [], habitsWithDetails: [mockHabit], setHabits: jest.fn(), categories: [], loadData: jest.fn(), habitLogs: [], }}>
         <IndexScreen />
-      </StudentContext.Provider>
+      </HabitContext.Provider>
     );
 
-    expect(getByText('Test Student')).toBeTruthy();
-    expect(getByText('Add Student')).toBeTruthy();
+    expect(getByText('Drink Water')).toBeTruthy();
+    expect(getByText('Add Habit')).toBeTruthy();
   });
 });

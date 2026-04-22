@@ -25,7 +25,7 @@ export default function HabitDetail() {
     (h: HabitWithDetails) => h.id === Number(id)
   );
 
-  // log completed
+  // log completed - add a habitlog record
   const logHabitToday = async () => {
 
     await db.insert(habitLogs).values({

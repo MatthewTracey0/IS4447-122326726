@@ -41,3 +41,4 @@ describe('IndexScreen', () => {
     expect(getByText('Add Habit')).toBeTruthy();
   });
 });
+

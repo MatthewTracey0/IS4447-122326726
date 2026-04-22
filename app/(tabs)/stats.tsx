@@ -53,7 +53,7 @@ export default function StatsScreen() {
     void loadLogs();
   }, []);
 
-  // Makes sure that there is atleast 1 habit loaded and the user hasnt selected one already
+  // Makes sure that there is at least 1 habit loaded and the user hasnt selected one already
   useEffect(() => {
     if (habitsWithDetails.length > 0 && selectedHabitId === null) {
       setSelectedHabitId(habitsWithDetails[0].id);

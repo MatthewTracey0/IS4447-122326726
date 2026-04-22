@@ -9,6 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { HabitWithDetails, HabitContext } from '../_layout';
 
 function getHabitStreak(habitId: number, logs: any[]) {
+
   // Getting the logs for the specific habit
   const habitLogs = logs.filter((log) => log.habitId === habitId);
 

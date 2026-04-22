@@ -10,7 +10,7 @@ export async function seedHabitsIfEmpty() {
     return;
   }
 
-  /* delete the data in the 4 tables
+  /* uncomment this to delete the data in the 4 tables
   await db.delete(habitLogs);
   await db.delete(targets);
   await db.delete(habits);

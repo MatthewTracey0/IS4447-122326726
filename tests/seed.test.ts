@@ -1,5 +1,9 @@
 import { seedHabitsIfEmpty } from '../db/seed';
 import { db } from '../db/client';
+import { habits as habitsTable } from '../db/schema';
+import { categories as categoriesTable } from '../db/schema';
+import { targets as targetsTable } from '../db/schema';
+import { habitLogs as habitLogsTable } from '../db/schema';
 
 jest.mock('../db/client', () => ({
   db: {
@@ -23,8 +27,10 @@ describe('seedHabitsIfEmpty', () => {
 
     await seedHabitsIfEmpty();
 
-    expect(mockDb.insert).toHaveBeenCalled();
-    expect(mockValues).toHaveBeenCalled();
+    expect(mockDb.insert).toHaveBeenCalledWith(categoriesTable);
+    expect(mockDb.insert).toHaveBeenCalledWith(habitsTable);
+    expect(mockDb.insert).toHaveBeenCalledWith(targetsTable);
+    expect(mockDb.insert).toHaveBeenCalledWith(habitLogsTable);
   });
 
   it('does nothing when habits already exist', async () => {
